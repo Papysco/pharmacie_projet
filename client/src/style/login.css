@@ -31,7 +31,13 @@ section {
   }
 }
 
+/* ---------------------------------------- */
+
 .blue_button {
   background-color: #4fabe4;
   width: 10rem;
+}
+
+.card {
+  height: 87vh;
 }

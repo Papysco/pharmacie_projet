@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../style/login.css";
-import logo from "../images/Pharmacie.svg";
+import logo from "../images/Pharmacie_small.svg";
 
 class Login extends Component {
   state = {
@@ -22,12 +22,12 @@ class Login extends Component {
     for (let i = 0; i < this.state.info_login.length; i++) {
       let element = this.state.info_login[i];
 
-      if (element.login == login && element.password == password) {
+      if (element.login === login && element.password === password) {
         found = true;
       }
     }
 
-    found == true
+    found === true
       ? this.setState({ error: false })
       : this.setState({ error: true });
   };
@@ -49,7 +49,7 @@ class Login extends Component {
           className="alert alert-danger d-flex align-items-center"
           role="alert"
         >
-          <div>Identifiant ou mot de passe incorrect !</div>
+          <div>Identifiant ou Mot de Passe Incorrect !</div>
         </div>
       );
     } else {
@@ -58,7 +58,7 @@ class Login extends Component {
   };
 
   render() {
-    const { error } = this.state;
+    // const { error } = this.state;
 
     return (
       <section className="h-100 d-flex align-items-center">
@@ -70,7 +70,7 @@ class Login extends Component {
                   <div className="text-center">
                     <img
                       src={logo}
-                      style={{ width: "350px", height: "250px" }}
+                      style={{ width: "200px", height: "160px" }}
                       alt="logo"
                     />
                   </div>
@@ -84,7 +84,7 @@ class Login extends Component {
                         type="email"
                         id="identifiant"
                         className="form-control"
-                        placeholder="adresse e-mail"
+                        placeholder="Adresse E-mail"
                         required
                         value={this.state.login}
                         onChange={this.onChangeLogin}
@@ -107,14 +107,14 @@ class Login extends Component {
                     </div>
 
                     <div className="text-center pt-2 mb-5 pb-1">
+                      <br />
                       <button
                         className="btn btn-primary btn-block fa-lg mb-3 blue_button"
                         type="button"
                         onClick={this.handleLogin}
                       >
-                        Se connecter
+                        Connexion
                       </button>
-                      <br />
                       <br />
                       {this.handleError()}
                     </div>
