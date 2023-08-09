@@ -28,16 +28,38 @@ class Navbar extends Component {
           <li className="navbar-item">
             <Link className="link" to="/">
               <i className="bi bi-bell-fill" style={{ fontSize: 25 }}></i>
+              <span
+                className="badge badge-secondary"
+                style={{
+                  color: "white",
+                  backgroundColor: "red",
+                  fontSize: 12,
+                  marginLeft: "0.5rem",
+                }}
+              >
+                {4}
+              </span>
             </Link>{" "}
           </li>
-          <li className="navbar-item">
+          {/* <li className="navbar-item">
             <Link className="link" to="/vendre">
               <i
                 className="bi bi-chat-left-dots-fill"
                 style={{ fontSize: 25 }}
               ></i>
+              <span
+                className="badge badge-secondary"
+                style={{
+                  color: "white",
+                  backgroundColor: "red",
+                  fontSize: 12,
+                  marginLeft: "0.5rem",
+                }}
+              >
+                {2}
+              </span>
             </Link>{" "}
-          </li>
+          </li> */}
           {/* -------------------- */}
           <li className="navbar-item nav-profile dropdown">
             <div className="nav-profile-img" style={{ marginTop: "0.7rem" }}>

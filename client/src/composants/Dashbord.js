@@ -46,7 +46,7 @@ class DashBord extends Component {
           </li>
           <li className="nav-item">
             <Link className="link" to="/dashbord/medicaments-perimes">
-              Medicament périmés
+              Statut Médicaments
             </Link>{" "}
             <i className="bi bi-capsule-pill" style={{ fontSize: 18 }}></i>
           </li>

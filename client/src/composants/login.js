@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Navigate } from "react-router-dom";
 import "../style/login.css";
 import logo from "../images/Pharmacie_small.svg";
 
@@ -7,6 +8,7 @@ class Login extends Component {
     login: "",
     password: "",
     error: false,
+    authenticated: false,
     info_login: [
       { login: "papyscofall@gmail.com", password: "1234" },
       { login: "papysco@gmail.com", password: "1234" },
@@ -17,6 +19,8 @@ class Login extends Component {
   handleLogin = (event) => {
     event.preventDefault();
     const { login, password } = this.state;
+    const { onLogin } = this.props; // Destructure onLogin prop
+
     let found = false;
 
     for (let i = 0; i < this.state.info_login.length; i++) {
@@ -27,9 +31,14 @@ class Login extends Component {
       }
     }
 
-    found === true
-      ? this.setState({ error: false })
-      : this.setState({ error: true });
+    if (found) {
+      this.setState({ error: false, authenticated: true });
+
+      const user = { email: login, name: "User Name", isAdmin: true };
+      onLogin(user);
+    } else {
+      this.setState({ error: true });
+    }
   };
 
   onChangeLogin = (event) => {
@@ -58,7 +67,11 @@ class Login extends Component {
   };
 
   render() {
-    // const { error } = this.state;
+    const { error, authenticated } = this.state;
+
+    if (authenticated) {
+      return <Navigate to="/dashbord" />;
+    }
 
     return (
       <section className="h-100 d-flex align-items-center">

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./composants/Navbar";
 import DashBord from "./composants/Dashbord";
@@ -21,15 +21,21 @@ function MainLayout({ children }) {
 }
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  const handleLogin = (user) => {
+    setUser(user);
+  };
+
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Login onLogin={handleLogin} />} />
       <Route
         path="/dashbord/*"
         element={
           <MainLayout>
             <Routes>
-              <Route index element={<Accueil />} />
+              <Route index element={<Accueil user={user} />} />
             </Routes>
           </MainLayout>
         }
