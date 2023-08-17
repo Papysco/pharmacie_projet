@@ -1,9 +1,34 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "../style/navbar.css";
+import axios from "axios";
 import logo from "../images/Pharmacie_small.svg";
 
 class Navbar extends Component {
+  state = {
+    nbrMedocAlerte: 0,
+    nbrMedocPerime: 0,
+  };
+
+  async componentDidMount() {
+    const response = await axios.get(
+      "http://localhost:30500/nombreMedicamentAlerte"
+    );
+    const response1 = await axios.get(
+      "http://localhost:30500/nombreMedicamentPerime"
+    );
+    const nbrMedocAlerte = response.data[0].count;
+    const nbrMedocPerime = response1.data[0].count;
+
+    this.setState({
+      nbrMedocAlerte: nbrMedocAlerte,
+      nbrMedocPerime: nbrMedocPerime,
+    });
+
+    console.log(nbrMedocAlerte);
+    console.log(nbrMedocPerime);
+  }
+
   render() {
     return (
       <nav className="navbar navbar-light bg-light">
@@ -14,8 +39,6 @@ class Navbar extends Component {
             placeholder="Rechercher"
             aria-label="Search"
           />
-          <br />
-
           <button
             className="btn btn-outline-success my-2 my-sm-0 navbar-btn"
             type="submit"
@@ -26,7 +49,7 @@ class Navbar extends Component {
 
         <ul className="navbar-ul">
           <li className="navbar-item">
-            <Link className="link" to="/">
+            <Link className="link" to="/dashbord/medicaments-perimes">
               <i className="bi bi-bell-fill" style={{ fontSize: 25 }}></i>
               <span
                 className="badge badge-secondary"
@@ -37,30 +60,11 @@ class Navbar extends Component {
                   marginLeft: "0.5rem",
                 }}
               >
-                {4}
+                {this.state.nbrMedocAlerte + this.state.nbrMedocPerime}
               </span>
-            </Link>{" "}
+            </Link>
           </li>
-          {/* <li className="navbar-item">
-            <Link className="link" to="/vendre">
-              <i
-                className="bi bi-chat-left-dots-fill"
-                style={{ fontSize: 25 }}
-              ></i>
-              <span
-                className="badge badge-secondary"
-                style={{
-                  color: "white",
-                  backgroundColor: "red",
-                  fontSize: 12,
-                  marginLeft: "0.5rem",
-                }}
-              >
-                {2}
-              </span>
-            </Link>{" "}
-          </li> */}
-          {/* -------------------- */}
+
           <li className="navbar-item nav-profile dropdown">
             <div className="nav-profile-img" style={{ marginTop: "0.7rem" }}>
               <img
@@ -70,12 +74,7 @@ class Navbar extends Component {
               />
             </div>
             <div className="nav-profile-text" style={{ marginLeft: "0.7rem" }}>
-              <p
-                className="mb-1 text-black"
-                style={{ fontFamily: "ubuntu-regular", color: "#3e4b5b" }}
-              >
-                Ibrahima Fall
-              </p>
+              <p className="mb-1 text-black font-ubuntu">Ibrahima Fall</p>
             </div>
           </li>
         </ul>

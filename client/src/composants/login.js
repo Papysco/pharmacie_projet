@@ -19,7 +19,7 @@ class Login extends Component {
   handleLogin = (event) => {
     event.preventDefault();
     const { login, password } = this.state;
-    const { onLogin } = this.props; // Destructure onLogin prop
+    const { onLogin } = this.props;
 
     let found = false;
 
@@ -67,7 +67,7 @@ class Login extends Component {
   };
 
   render() {
-    const { error, authenticated } = this.state;
+    const { authenticated } = this.state;
 
     if (authenticated) {
       return <Navigate to="/dashbord" />;
