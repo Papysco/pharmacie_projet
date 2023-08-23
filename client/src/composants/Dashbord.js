@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "../style/dashbord.css";
 import logo from "../images/Pharmacie_small.svg";
-import axios from "axios";
+
+// import axios from "axios";
 
 class DashBord extends Component {
   render() {

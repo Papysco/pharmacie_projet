@@ -5,6 +5,7 @@ import DashBord from "./composants/Dashbord";
 import Login from "./composants/Login";
 import "../src/style/app.css";
 import Accueil from "./composants/Accueil";
+import Stock from "./composants/Stock";
 
 class MainLayout extends Component {
   render() {
@@ -32,8 +33,6 @@ class App extends Component {
     };
   }
 
-  
-
   handleLogin = (user) => {
     this.setState({ user: user });
   };
@@ -50,6 +49,7 @@ class App extends Component {
             <MainLayout>
               <Routes>
                 <Route index element={<Accueil user={user} />} />
+                <Route path="stock" element={<Stock user={user} />} />
               </Routes>
             </MainLayout>
           }

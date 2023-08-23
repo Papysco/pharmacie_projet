@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import DatePicker from "react-datepicker";
 import axios from "axios";
+import { Navigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import "../style/accueil.css";
 import pilule from "../images/pilule.png";
@@ -57,24 +58,8 @@ class Accueil extends Component {
     super(props);
     this.state = {
       selectedDate: new Date(),
-      medicaments: [
-        {
-          id: 1,
-          nom: "Medicament 1",
-          statut: 0,
-          type: "Type 1",
-          prix: "1000 FCFA",
-        },
-      ],
-      ventesParJour: [
-        { jour: "Lundi", ventes: 10 },
-        { jour: "Mardi", ventes: 8 },
-        { jour: "Mercredi", ventes: 15 },
-        { jour: "Jeudi", ventes: 5 },
-        { jour: "Vendredi", ventes: 12 },
-        { jour: "Samedi", ventes: 18 },
-        { jour: "Dimanche", ventes: 7 },
-      ],
+      dateHttp: "",
+      medicaments: [],
       nbrVente: 0,
       nbrTotalMedoc: 0,
       nbrMedocAlerte: 0,
@@ -83,6 +68,9 @@ class Accueil extends Component {
   }
 
   async componentDidMount() {
+    let date = new Date();
+    date = this.convertDate(date);
+
     const response = await axios.get("http://localhost:30500/nombreVente");
     const response1 = await axios.get(
       "http://localhost:30500/nombreMedicament"
@@ -93,33 +81,74 @@ class Accueil extends Component {
     const response3 = await axios.get(
       "http://localhost:30500/nombreMedicamentPerime"
     );
+    const response4 = await axios.get(
+      `http://localhost:30500/venteRecentes?date=${date}`
+    );
+
     const nbrVente = response.data[0].count;
     const nbrTotalMedoc = response1.data[0].count;
     const nbrMedocAlerte = response2.data[0].count;
     const nbrMedocPerime = response3.data[0].count;
+    const listeVente = response4.data;
 
     this.setState({
       nbrVente: nbrVente,
       nbrTotalMedoc: nbrTotalMedoc,
       nbrMedocAlerte: nbrMedocAlerte,
       nbrMedocPerime: nbrMedocPerime,
+      medicaments: listeVente,
     });
-
-    console.log(nbrVente);
-    console.log(nbrTotalMedoc);
   }
 
+  async componentDidUpdate() {
+    const response4 = await axios.get(
+      `http://localhost:30500/venteRecentes?date=${this.state.dateHttp}`
+    );
+    const listeVente = response4.data;
+
+    this.setState({
+      medicaments: listeVente,
+    });
+  }
+
+  handleDateChange = (date) => {
+    if (date) {
+      let datehttp = this.convertDate(date);
+
+      console.log(datehttp);
+      this.setState({
+        selectedDate: date,
+        dateHttp: datehttp,
+      });
+    }
+  };
+
+  convertDate = (date) => {
+    let annee = date.getFullYear();
+    let mois = date.getMonth() + 1;
+    let jour = date.getDate();
+
+    if (mois < 10) {
+      mois = "0" + mois.toString();
+    }
+    if (jour < 10) {
+      jour = "0" + jour.toString();
+    }
+    let datehttp = annee + "-" + mois + "-" + jour;
+
+    return datehttp;
+  };
+
   render() {
-    const { medicaments, selectedDate, ventesParJour } = this.state;
+    const { medicaments } = this.state;
+    const { user } = this.props;
+
+    if (user == null) {
+      return <Navigate to="/" />;
+    }
 
     return (
-      <body
-        style={{
-          backgroundColor: "#f2edf3",
-          paddingTop: "2rem",
-          paddingBottom: "5rem",
-        }}
-      >
+      <body className="body-accueil">
         <div className="resume">
           <div className="col-md-12">
             <div className="row resume-row">
@@ -162,27 +191,20 @@ class Accueil extends Component {
           <h2 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
             Ventes Récentes
           </h2>
-          <style>
-            {`
-              .date-picker {
-                display: flex;
-                align-items: center;
-                margin-top: 1rem;              
-              }                  
-            `}
-          </style>
+
           <div className="date-picker">
             <DatePicker
-              selected={selectedDate}
-              onChange={(date) => this.setState({ selectedDate: date })}
-              dateFormat="dd/MM/yyyy"
-              style={{ border: "2px solid blue" }}
+              selected={this.state.selectedDate}
+              onChange={this.handleDateChange}
+              dateFormat="yyyy/MM/dd"
+              style={{ border: "2px solid black" }}
             />
             <i
               className="bi bi-calendar-date"
               style={{ fontSize: "1.9rem", marginLeft: "0.5rem" }}
             ></i>
           </div>
+
           <br />
           <table className="table table-striped">
             <thead>
@@ -197,66 +219,44 @@ class Accueil extends Component {
               </tr>
             </thead>
             <tbody>
-              {medicaments.map((medicament) => (
-                <tr key={medicament.id}>
-                  <th scope="row">
-                    <img src={pilule} alt="" />
-                  </th>
-                  <td>{medicament.nom}</td>
-                  <td>{medicament.type}</td>
-                  <td>
-                    {
+              {medicaments.map((medicament) => {
+                const isAlert =
+                  new Date(medicament.date_expiration) < Date.now();
+                const statut = isAlert ? 1 : 0;
+
+                return (
+                  <tr key={medicament.id}>
+                    <th scope="row">
+                      <img src={pilule} alt="" />
+                    </th>
+                    <td>{medicament.nom}</td>
+                    <td>{medicament.type}</td>
+                    <td>
                       <span
-                        className="badge badge-primary"
+                        className={`badge badge-primary ${
+                          statut === 1 ? `bg-danger` : `bg-success`
+                        }`}
                         style={{
                           color: "white",
-                          backgroundColor:
-                            medicament.statut === 1 ? "red" : null,
                           fontSize: 15,
                           marginLeft: "0.5rem",
                         }}
                       >
-                        {medicament.statut === 1 ? (
+                        {statut === 1 ? (
                           <span>En alerte</span>
-                        ) : null}
+                        ) : (
+                          <span>normal</span>
+                        )}
                       </span>
-                    }
-                  </td>
-                  <td>{medicament.prix}</td>
-                </tr>
-              ))}
+                    </td>
+                    <td>{medicament.prix} FCFA</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
 
-        {/* Diagramme en bande pour les ventes par jour */}
-        <div className="ventes-par-jour">
-          <h2 style={{ fontFamily: "ubuntu-regular" }}>
-            Ventes par jour de la semaine
-          </h2>
-          <div className="bar-chart">
-            {ventesParJour.map((jour) => (
-              <div
-                key={jour.jour}
-                className="bar"
-                style={{
-                  height: `${jour.ventes * 20}px`,
-                  backgroundColor: "#4286f4",
-                  fontSize: "2rem",
-                }}
-              >
-                {jour.ventes}
-              </div>
-            ))}
-          </div>
-          <div className="jours-de-semaine">
-            {ventesParJour.map((jour) => (
-              <div key={jour.jour} className="jour">
-                {jour.jour}
-              </div>
-            ))}
-          </div>
-        </div>
         {/* <div>
           <h2>Welcome, {user ? user.name : "Guest"}!</h2>
           {user && user.isAdmin && <p>You are an admin.</p>}

@@ -3,12 +3,20 @@
   margin: 0px;
   font-family: "ubuntu-regular";
 }
+
+html {
+  /* height: 100vh; */
+  overflow: hidden;
+}
+
 body {
   background-color: #f2edf3;
   background-color: white;
+  height: 100vh;
 }
 .App {
   display: flex;
+  /* height: 100vh; */
 }
 .app-header {
   width: 100%;
@@ -21,4 +29,5 @@ body {
 .section {
   width: 100%;
   margin: 0px;
+  /* height: 100vh; */
 }

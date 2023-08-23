@@ -24,9 +24,6 @@ class Navbar extends Component {
       nbrMedocAlerte: nbrMedocAlerte,
       nbrMedocPerime: nbrMedocPerime,
     });
-
-    console.log(nbrMedocAlerte);
-    console.log(nbrMedocPerime);
   }
 
   render() {

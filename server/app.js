@@ -1,15 +1,17 @@
 const express = require("express");
 const cors = require("cors");
-
 const connexion = require("./connexion");
-const app = express();
 
 // initialisation
+const app = express();
 app.use(cors());
 
 // routes
 app.get("/stock", function (req, res) {
-  const requete = "SELECT * FROM medicament";
+  const requete = `SELECT m.nom, m.type, m.prix, s.quantite , DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication, 
+  DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
+  FROM stock s, medicament m
+  WHERE s.id_medicament = m.id_medicament`;
 
   connexion.query(requete, (error, results) => {
     if (error) {
@@ -23,10 +25,13 @@ app.get("/stock", function (req, res) {
 });
 
 app.get("/venteRecentes", function (req, res) {
-  const requete = `SELECT m.nom, m.type ,m.prix, DATE_FORMAT(m.date_fabrication, '%y/%m/%d') as date_fabrication ,
-    DATE_FORMAT(m.date_expiration, '%y/%m/%d') as date_expiration
+  const dateSelectionne = req.query.date;
+
+  const requete = `SELECT m.id_medicament as id ,m.nom, m.type ,m.prix, DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication ,
+    DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
     FROM vente v , medicament m 
     WHERE v.id_medicament = m.id_medicament
+    AND v.date_vente = '${dateSelectionne}'
   `;
 
   connexion.query(requete, (error, results) => {
