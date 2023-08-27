@@ -54,10 +54,10 @@ class Navbar extends Component {
                   color: "white",
                   backgroundColor: "red",
                   fontSize: 12,
-                  marginLeft: "0.5rem",
+                  marginLeft: "0.15rem",
                 }}
               >
-                {this.state.nbrMedocAlerte + this.state.nbrMedocPerime}
+                {this.state.nbrMedocAlerte}
               </span>
             </Link>
           </li>

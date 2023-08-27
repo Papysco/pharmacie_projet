@@ -1,0 +1,9 @@
+.form-container {
+  /* width: 90%; */
+  background-color: white;
+  margin: 3rem;
+  margin-top: 1rem;
+  padding: 3rem;
+  border-radius: 30px;
+  font-size: 1.3rem;
+}

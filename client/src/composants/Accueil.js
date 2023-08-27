@@ -170,18 +170,20 @@ class Accueil extends Component {
                 icon="fas fa-ticket-alt"
                 title="Medicaments en alerte"
                 value={this.state.nbrMedocAlerte}
-                pourcentage={
-                  (this.state.nbrMedocAlerte / this.state.nbrTotalMedoc) * 100
-                }
+                pourcentage={(
+                  (this.state.nbrMedocAlerte / this.state.nbrTotalMedoc) *
+                  100
+                ).toFixed(0)}
                 color="green-dark"
               />
               <DashboardCard
                 icon="fas fa-dollar-sign"
                 title="Médicaments perimés"
                 value={this.state.nbrMedocPerime}
-                pourcentage={
-                  (this.state.nbrMedocPerime / this.state.nbrTotalMedoc) * 100
-                }
+                pourcentage={(
+                  (this.state.nbrMedocPerime / this.state.nbrTotalMedoc) *
+                  100
+                ).toFixed(0)}
                 color="orange-dark"
               />
             </div>

@@ -2,14 +2,13 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import "../style/accueil.css";
-import "../style/stock.css";
 import pilule from "../images/pilule.png";
 import pharma_icone from "../images/pharmacie_icone.png";
 
 class Stock extends Component {
   state = {
     medicaments: [],
-    recherche: "", // Ajout de l'état pour le terme de recherche
+    recherche: "",
   };
 
   async componentDidMount() {

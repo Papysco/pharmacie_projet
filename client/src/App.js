@@ -6,6 +6,8 @@ import Login from "./composants/Login";
 import "../src/style/app.css";
 import Accueil from "./composants/Accueil";
 import Stock from "./composants/Stock";
+import Statut from "./composants/Statut";
+import Ajout from "./composants/ajout";
 
 class MainLayout extends Component {
   render() {
@@ -50,6 +52,11 @@ class App extends Component {
               <Routes>
                 <Route index element={<Accueil user={user} />} />
                 <Route path="stock" element={<Stock user={user} />} />
+                <Route
+                  path="medicaments-perimes"
+                  element={<Statut user={user} />}
+                />
+                <Route path="Ajouter" element={<Ajout user={user} />} />
               </Routes>
             </MainLayout>
           }
