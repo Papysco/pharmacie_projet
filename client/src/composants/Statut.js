@@ -56,9 +56,9 @@ class Statut extends Component {
             alignItems: "center",
           }}
         >
-          <h2 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
+          <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
             Medicaments En Alerte
-          </h2>
+          </h1>
           <br />
           <br />
 
@@ -102,8 +102,7 @@ class Statut extends Component {
                   Date.now(),
                   medicament.date_expiration
                 );
-                const isAlert = difference <= 15 ? 1 : 0;
-                const statut = isAlert == 1 ? 1 : 0;
+                const statut = difference <= 15 ? 1 : 0;
 
                 if (statut) {
                   return (

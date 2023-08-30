@@ -5,56 +5,64 @@ import Modal from "react-modal";
 import "../style/accueil.css";
 import "../style/ajout.css";
 
-class Ajout extends Component {
+class Commande extends Component {
   state = {
+    medicaments: [],
+    fournisseurs: [],
+
     nom_medicament: "",
-    prix_unitaire: "",
     type: "",
     quantite: "",
-    date_fabrication: "",
-    date_expiration: "",
-    posologie: "",
+    fournisseurSelectionne: "",
     showModal: false,
     message: null,
   };
 
+  async componentDidMount() {
+    const response = await axios.get("http://localhost:30500/medicament");
+    const listeMedicament = response.data;
+    //
+    const response1 = await axios.get("http://localhost:30500/fournisseur");
+    const listeFournisseur = response1.data;
+
+    this.setState({
+      medicaments: listeMedicament,
+      fournisseurs: listeFournisseur,
+    });
+  }
+
   handleInputChange = (event) => {
     const { id, value } = event.target;
-    this.setState({ [id]: value });
+
+    if (id === "fournisseur") {
+      this.setState({ fournisseurSelectionne: value });
+    } else {
+      this.setState({ [id]: value });
+    }
   };
 
   handleSubmit = async (event) => {
     event.preventDefault();
-
-    const formattedDateFabrication = new Date(
-      this.state.date_fabrication
-    ).toLocaleDateString("en-CA");
-    const formattedDateExpiration = new Date(
-      this.state.date_expiration
-    ).toLocaleDateString("en-CA");
+    const { user } = this.props;
 
     const dataToSend = {
       nom_medicament: this.state.nom_medicament,
-      prix_unitaire: this.state.prix_unitaire,
       type: this.state.type,
       quantite: this.state.quantite,
-      date_fabrication: formattedDateFabrication,
-      date_expiration: formattedDateExpiration,
-      posologie: this.state.posologie,
+      fournisseurSelectionne: this.state.fournisseurSelectionne,
+      emailPharmacien: user.email,
     };
 
+    console.log(dataToSend);
+
     try {
-      const response = await axios.post("/ajouter-medicament", dataToSend);
+      const response = await axios.post("/commander", dataToSend);
       // console.log(response.data.message);
 
       this.setState({
         nom_medicament: "",
-        prix_unitaire: "",
         type: "",
         quantite: "",
-        date_fabrication: "",
-        date_expiration: "",
-        posologie: "",
       });
 
       if (response) {
@@ -68,15 +76,7 @@ class Ajout extends Component {
   };
 
   render() {
-    const {
-      nom_medicament,
-      prix_unitaire,
-      type,
-      quantite,
-      date_fabrication,
-      date_expiration,
-      posologie,
-    } = this.state;
+    const { nom_medicament, type, quantite, fournisseurs } = this.state;
 
     const { user } = this.props;
     if (user == null) {
@@ -87,7 +87,7 @@ class Ajout extends Component {
       <body className="body-accueil">
         <div className="form-container">
           <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
-            Ajouter Médicament
+            Formulaire de Commande
           </h1>
           <br />
           <br />
@@ -111,18 +111,25 @@ class Ajout extends Component {
               </div>
               <div className="col">
                 <div className="form-outline">
-                  <label className="form-label" htmlFor="prix_unitaire">
-                    Prix Unitaire
+                  <label className="form-label" htmlFor="fournisseur">
+                    E-mail Fournisseur
                   </label>
-                  <input
-                    type="text"
-                    id="prix_unitaire"
+
+                  {/*  */}
+                  <select
+                    id="fournisseur"
                     className="form-control"
-                    placeholder="FCFA"
-                    value={prix_unitaire}
+                    value={this.state.fournisseurSelectionne}
                     onChange={this.handleInputChange}
                     required
-                  />
+                  >
+                    <option value="">Sélectionner un fournisseur</option>
+                    {fournisseurs.map((fournisseur) => (
+                      <option key={fournisseur.email} value={fournisseur.email}>
+                        {fournisseur.email}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -163,52 +170,37 @@ class Ajout extends Component {
 
             <div className="row mb-4">
               <div className="col">
-                <div className="form-outline mb-4">
-                  <label className="form-label" htmlFor="date_fabrication">
-                    Date Fabrication
+                <div className="form-outline">
+                  <label className="form-label" htmlFor="prenom_pharmacien">
+                    Prenom & Nom Pharmacien
                   </label>
                   <input
-                    type="date"
-                    id="date_fabrication"
+                    type="text"
+                    id="prenom_pharmacien"
                     className="form-control"
-                    value={date_fabrication}
-                    onChange={this.handleInputChange}
-                    required
+                    placeholder="Prenom Nom"
+                    value={user.name}
+                    readOnly={true}
                   />
                 </div>
               </div>
               <div className="col">
-                <div className="form-outline mb-4">
-                  <label className="form-label" htmlFor="date_expiration">
-                    Date Expiration
+                <div className="form-outline">
+                  <label className="form-label" htmlFor="emailPharmacien">
+                    E-mail Pharmacien
                   </label>
                   <input
-                    type="date"
-                    id="date_expiration"
+                    type="text"
+                    id="emailPharmacien"
                     className="form-control"
-                    value={date_expiration}
-                    onChange={this.handleInputChange}
-                    required
+                    placeholder="Prenom Nom"
+                    value={user.email}
+                    readOnly={true}
                   />
                 </div>
               </div>
             </div>
-
-            <div className="form-outline mb-4">
-              <label className="form-label" htmlFor="posologie">
-                Posologie
-              </label>
-              <textarea
-                className="form-control"
-                id="posologie"
-                rows="4"
-                placeholder="Exemple : 1 comprimé toutes les 6 heures"
-                value={posologie}
-                onChange={this.handleInputChange}
-                required
-              ></textarea>
-            </div>
-
+            <br />
             <button
               type="submit"
               className="btn btn-primary btn-block mb-4"
@@ -218,7 +210,7 @@ class Ajout extends Component {
                 fontSize: "1.2rem",
               }}
             >
-              Enregistrer
+              Valider
             </button>
           </form>
         </div>
@@ -269,4 +261,4 @@ class Ajout extends Component {
   }
 }
 
-export default Ajout;
+export default Commande;

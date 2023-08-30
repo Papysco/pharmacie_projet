@@ -8,6 +8,7 @@ import Accueil from "./composants/Accueil";
 import Stock from "./composants/Stock";
 import Statut from "./composants/Statut";
 import Ajout from "./composants/ajout";
+import Commande from "./composants/Commande";
 
 class MainLayout extends Component {
   render() {
@@ -57,6 +58,7 @@ class App extends Component {
                   element={<Statut user={user} />}
                 />
                 <Route path="Ajouter" element={<Ajout user={user} />} />
+                <Route path="commander" element={<Commande user={user} />} />
               </Routes>
             </MainLayout>
           }

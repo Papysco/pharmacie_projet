@@ -46,6 +46,32 @@ app.get("/venteRecentes", function (req, res) {
   });
 });
 
+app.get("/medicament", (req, res) => {
+  const requete = "SELECT id_medicament, nom FROM medicament ";
+  connexion.query(requete, (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Erreur lors de l'exécution de la requête" });
+    }
+
+    res.json(results);
+  });
+});
+
+app.get("/fournisseur", (req, res) => {
+  const requete = "SELECT email FROM fournisseur";
+  connexion.query(requete, (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Erreur lors de l'exécution de la requête" });
+    }
+
+    res.json(results);
+  });
+});
+
 app.get("/nombreMedicament", (req, res) => {
   const requete = "SELECT COUNT(*) as count FROM stock";
   connexion.query(requete, (error, results) => {
@@ -110,10 +136,9 @@ app.get("/nombreMedicamentPerime", (req, res) => {
     res.json(results);
   });
 });
-// -----------------------------------------------------------------------
 
-// Middleware pour analyser les données POST
-// app.use(bodyParser.urlencoded({ extended: true }));
+// AJOUT -----------------------------------------------------------------------
+
 app.use(bodyParser.json());
 
 // Gérer la requête POST depuis le formulaire
@@ -268,7 +293,80 @@ app.post("/ajouter-medicament", (req, res) => {
   );
 });
 
-// -------------------------------------------------------------------------
+// COMMANDER ---------------------------------------------------------------
+
+app.post("/commander", async (req, res) => {
+  try {
+    const {
+      nom_medicament,
+      type,
+      quantite,
+      fournisseurSelectionne,
+      emailPharmacien,
+    } = req.body;
+
+    // Bloc Envoi e-mail au fournisseur
+    // A completer .....
+
+    const idPharmacienResult = await executerRequete(
+      `SELECT id_pharmacien FROM pharmacien WHERE email = "${emailPharmacien}"`
+    );
+    const id_pharmacien = idPharmacienResult[0].id_pharmacien;
+
+    const idMedicamentResult = await executerRequete(
+      `SELECT id_medicament FROM medicament WHERE UPPER(nom) = UPPER("${nom_medicament}")`
+    );
+    const id_medicament = idMedicamentResult[0].id_medicament;
+
+    const idFournisseurResult = await executerRequete(
+      `SELECT id_fournisseur FROM fournisseur WHERE email = "${fournisseurSelectionne}"`
+    );
+    const id_fournisseur = idFournisseurResult[0].id_fournisseur;
+
+    const factureInsertResult = await executerRequete(
+      `INSERT INTO facture_commande (date_facture) VALUES (DATE_FORMAT(DATE(NOW()), '%y/%m/%d'))`
+    );
+    const id_facture = factureInsertResult.insertId;
+
+    const dateActuelle = new Date();
+
+    await executerRequete(
+      `INSERT INTO commande (date_commande, quantite, id_pharmacien, id_fournisseur, id_medicament, id_facture)
+      VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        dateActuelle,
+        quantite,
+        id_pharmacien,
+        id_fournisseur,
+        id_medicament,
+        id_facture,
+      ]
+    );
+
+    console.log("Commande enregistrée avec succès");
+    res.status(200).json({
+      message: "Commande enregistrée avec succès",
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de la commande:", error);
+    res.status(500).json({
+      erreur: "Erreur lors de l'enregistrement de la commande",
+    });
+  }
+});
+
+function executerRequete(query, parametre = []) {
+  return new Promise((resolve, reject) => {
+    connexion.query(query, parametre, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
 // lancement server
 app.listen(30500, (error) => {
   if (error) throw error;

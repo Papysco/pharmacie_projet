@@ -190,9 +190,9 @@ class Accueil extends Component {
           </div>
         </div>
         <div className="table-vente-recent">
-          <h2 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
+          <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
             Ventes Récentes
-          </h2>
+          </h1>
 
           <div className="date-picker">
             <DatePicker

@@ -21,6 +21,14 @@ class Stock extends Component {
     this.setState({ recherche: event.target.value });
   };
 
+  calculateDateDifference = (dateDebut, dateFin) => {
+    const dateDebutObj = new Date(dateDebut);
+    const dateFinObj = new Date(dateFin);
+    const differenceTemps = dateFinObj.getTime() - dateDebutObj.getTime();
+    const difference = Math.floor(differenceTemps / (1000 * 3600 * 24));
+    return difference;
+  };
+
   render() {
     const { medicaments, recherche } = this.state;
     const { user } = this.props;
@@ -47,9 +55,9 @@ class Stock extends Component {
             alignItems: "center",
           }}
         >
-          <h2 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
+          <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
             Stock
-          </h2>
+          </h1>
           <br />
           <br />
 
@@ -88,9 +96,11 @@ class Stock extends Component {
             </thead>
             <tbody>
               {medicamentTrie.map((medicament) => {
-                const isAlert =
-                  new Date(medicament.date_expiration) < Date.now();
-                const statut = isAlert ? 1 : 0;
+                const difference = this.calculateDateDifference(
+                  Date.now(),
+                  medicament.date_expiration
+                );
+                const statut = difference <= 15 ? 1 : 0;
 
                 return (
                   <tr key={medicament.id}>
