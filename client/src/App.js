@@ -9,6 +9,7 @@ import Stock from "./composants/Stock";
 import Statut from "./composants/Statut";
 import Ajout from "./composants/ajout";
 import Commande from "./composants/Commande";
+import Vendre from "./composants/Vendre";
 
 class MainLayout extends Component {
   render() {
@@ -59,6 +60,7 @@ class App extends Component {
                 />
                 <Route path="Ajouter" element={<Ajout user={user} />} />
                 <Route path="commander" element={<Commande user={user} />} />
+                <Route path="vendre" element={<Vendre user={user} />} />
               </Routes>
             </MainLayout>
           }

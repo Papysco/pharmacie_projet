@@ -9,7 +9,7 @@ app.use(cors());
 
 // routes
 app.get("/stock", function (req, res) {
-  const requete = `SELECT m.nom, m.type, m.prix, s.quantite , DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication, 
+  const requete = `SELECT m.id_medicament, m.nom, m.type, m.prix, s.quantite , DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication, 
   DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
   FROM stock s, medicament m
   WHERE s.id_medicament = m.id_medicament`;
@@ -351,6 +351,81 @@ app.post("/commander", async (req, res) => {
     console.error("Erreur lors de l'enregistrement de la commande:", error);
     res.status(500).json({
       erreur: "Erreur lors de l'enregistrement de la commande",
+    });
+  }
+});
+
+function executerRequete(query, parametre = []) {
+  return new Promise((resolve, reject) => {
+    connexion.query(query, parametre, (error, results) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+// VENDRE ---------------------------------------------------------------
+
+app.post("/vendre", async (req, res) => {
+  try {
+    const {
+      id_medicament,
+      quantite,
+      prenom_client,
+      nom_client,
+      numero_client,
+      emailPharmacien,
+    } = req.body;
+
+    const dateActuelle = new Date();
+
+    const idFactureResult = await executerRequete(
+      `INSERT INTO facture_vente (dateFacture, prenom_client, nom_client, numero_client)
+      VALUES (?, ?, ?, ?)`,
+      [dateActuelle, prenom_client, nom_client, numero_client]
+    );
+
+    const id_facture = idFactureResult.insertId;
+
+    const idPharmacienResult = await executerRequete(
+      `SELECT id_pharmacien FROM pharmacien WHERE email = "${emailPharmacien}"`
+    );
+    const id_pharmacien = idPharmacienResult[0].id_pharmacien;
+
+    const idVenteResult = await executerRequete(
+      `INSERT INTO vente (id_facture_vente, date_vente, quantite, id_pharmacien, id_medicament)
+      VALUES (?, ?, ?, ?, ?)`,
+      [id_facture, dateActuelle, quantite, id_pharmacien, id_medicament]
+    );
+
+    // MAJ Stock
+    await executerRequete(`UPDATE stock SET quantite = quantite - ${quantite} 
+                          WHERE id_medicament  = ${id_medicament}`);
+
+    const idQuantiteResult = await executerRequete(
+      `SELECT quantite FROM stock WHERE id_medicament = ${id_medicament}`
+    );
+
+    const quantiteRestant = idQuantiteResult[0].quantite;
+    if (quantiteRestant <= 0) {
+      await executerRequete(
+        `DELETE FROM stock WHERE id_medicament  = ${id_medicament}`
+      );
+    }
+
+    //
+
+    console.log("Vente enregistrée avec succès");
+    res.status(200).json({
+      message: "Vente enregistrée avec succès",
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'enregistrement de la vente:", error);
+    res.status(500).json({
+      erreur: "Erreur lors de l'enregistrement de la vente",
     });
   }
 });

@@ -79,7 +79,7 @@ class Stock extends Component {
           </form>
 
           <br />
-          <table className="table table-striped">
+          <table className="table table-striped table-hover">
             <thead>
               <tr style={{ fontFamily: "ubuntu-regular", fontSize: "1.5rem" }}>
                 <th scope="col">

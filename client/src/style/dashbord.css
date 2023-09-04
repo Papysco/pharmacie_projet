@@ -3,7 +3,7 @@
   margin: 0px;
 }
 .nav-bloc {
-  width: 15rem;
+  width: 18rem;
   min-height: 100vh;
   background-color: white;
   background-color: whitesmoke;
@@ -39,7 +39,7 @@
   justify-content: left;
   justify-content: space-between;
   padding: 0.5rem 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #3e4b5b;
   font-family: "ubuntu-regular", sans-serif;

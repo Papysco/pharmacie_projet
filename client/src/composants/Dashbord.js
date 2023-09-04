@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "../style/dashbord.css";
+import "../style/accueil.css";
 import logo from "../images/Pharmacie_small.svg";
 
 // import axios from "axios";
@@ -43,7 +44,7 @@ class DashBord extends Component {
               <Link className="link" to={link.to}>
                 {link.text}
               </Link>{" "}
-              <i className={`bi ${link.icon}`} style={{ fontSize: 18 }}></i>
+              <i className={`bi ${link.icon}`} style={{ fontSize: 20 }}></i>
             </li>
           ))}
         </ul>
@@ -51,6 +52,7 @@ class DashBord extends Component {
           type="button"
           className="btn btn-primary btn-dashboard"
           data-bs-toggle="button"
+          style={{ fontSize: "1.2rem" }}
         >
           Déconnecter
         </button>

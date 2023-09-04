@@ -23,6 +23,7 @@
   border-radius: 30px;
   background-color: white;
   margin: 2rem;
+  margin-top: 0rem;
 }
 
 .body-accueil {
@@ -37,6 +38,15 @@
   display: flex;
   align-items: center;
   margin-top: 1rem;
+}
+
+button {
+  font-size: 1.2rem;
+}
+
+/* table */
+tr {
+  font-size: 1.3rem;
 }
 
 /* ------------------------------------------------- */

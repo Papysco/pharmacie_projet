@@ -201,7 +201,7 @@ class Ajout extends Component {
               <textarea
                 className="form-control"
                 id="posologie"
-                rows="4"
+                rows="2"
                 placeholder="Exemple : 1 comprimé toutes les 6 heures"
                 value={posologie}
                 onChange={this.handleInputChange}
