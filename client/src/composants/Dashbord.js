@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "../style/dashbord.css";
 import "../style/accueil.css";
 import logo from "../images/Pharmacie_small.svg";
@@ -7,6 +7,8 @@ import logo from "../images/Pharmacie_small.svg";
 // import axios from "axios";
 
 class DashBord extends Component {
+  deconnecter = () => <Navigate to="/" />;
+
   render() {
     const links = [
       { to: "/dashbord", text: "Accueil", icon: "bi-house-door-fill" },
@@ -24,7 +26,7 @@ class DashBord extends Component {
         icon: "bi-capsule-pill",
       },
       {
-        to: "/dashbord/gestion-personnel",
+        to: "/dashbord/personnel",
         text: "Gestion personnel",
         icon: "bi-person-gear",
       },
@@ -48,14 +50,15 @@ class DashBord extends Component {
             </li>
           ))}
         </ul>
-        <button
-          type="button"
-          className="btn btn-primary btn-dashboard"
-          data-bs-toggle="button"
+
+        <a
+          className="link btn btn-primary btn-dashboard"
           style={{ fontSize: "1.2rem" }}
+          href="/"
+          onClick={this.deconnecter}
         >
           Déconnecter
-        </button>
+        </a>
       </nav>
     );
   }

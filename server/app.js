@@ -99,6 +99,18 @@ app.get("/nombreVente", (req, res) => {
   });
 });
 
+app.get("/personnel", (req, res) => {
+  const requete = "SELECT * FROM `pharmacien` WHERE 1";
+  connexion.query(requete, (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Erreur lors de l'exécution de la requête" });
+    }
+    res.json(results);
+  });
+});
+
 app.get("/nombreMedicamentAlerte", (req, res) => {
   const requete = `
     SELECT COUNT(*) as count
@@ -441,6 +453,80 @@ function executerRequete(query, parametre = []) {
     });
   });
 }
+
+// GERER PERSONNEL
+
+app.post("/personnel_supprimer", async (req, res) => {
+  const { id } = req.body;
+
+  const requete = `DELETE FROM pharmacien where id_pharmacien = ${id}`;
+
+  connexion.query(requete, (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Erreur lors de l'exécution de la requête" });
+    }
+    // res.json(results);
+  });
+});
+
+app.post("/ajouter-personnel", async (req, res) => {
+  const { prenom, nom, admin, type_personne, email, mdp, telephone } = req.body;
+
+  if (type_personne == 0) {
+    const requete_pharmacien = `INSERT INTO pharmacien (prenom, nom, admin, telephone, email, mdp) 
+    VALUES (?, ?, ?, ?, ?, ?)`;
+
+    connexion.query(
+      requete_pharmacien,
+      [prenom, nom, admin, telephone, email, mdp],
+      (erreur, resultat) => {
+        if (erreur) {
+          console.error("Erreur d'insertion du personnel", erreur);
+          res.status(500).json({
+            erreur: "Erreur  d'insertion du pharmacien ou fournisseur",
+          });
+          return;
+        }
+      }
+    );
+  } else {
+    const requete_fournisseur = `INSERT INTO fournisseur (prenom, nom, email, num_tel) 
+    VALUES (?, ?, ?, ?)`;
+
+    connexion.query(
+      requete_fournisseur,
+      [prenom, nom, email, telephone],
+      (erreur, resultat) => {
+        if (erreur) {
+          console.error("Erreur d'insertion du personnel", erreur);
+          res.status(500).json({
+            erreur: "Erreur  d'insertion du pharmacien ou fournisseur",
+          });
+          return;
+        }
+      }
+    );
+  }
+});
+
+app.post("/modifier-personnel", async (req, res) => {
+  const { id, prenom, nom, admin, email, mdp, telephone } = req.body;
+
+  const requete_pharmacien = `UPDATE  pharmacien 
+    SET prenom = "${prenom}", nom = "${nom}", admin = ${admin}, telephone = "${telephone}", email = "${email}", mdp = "${mdp}" 
+    WHERE id_pharmacien = ${id}`;
+
+  connexion.query(requete_pharmacien, (erreur, resultat) => {
+    if (erreur) {
+      console.error("Erreur de modification du personnel", erreur);
+      return res.status(500).json({
+        erreur: "Erreur  de modification du pharmacien",
+      });
+    }
+  });
+});
 
 // lancement server
 app.listen(30500, (error) => {

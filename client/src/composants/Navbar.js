@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "../style/navbar.css";
 import axios from "axios";
 import logo from "../images/Pharmacie_small.svg";
@@ -27,6 +27,12 @@ class Navbar extends Component {
   }
 
   render() {
+    const { user } = this.props;
+
+    if (user == null) {
+      return <Navigate to="/" />;
+    }
+
     return (
       <nav className="navbar navbar-light bg-light">
         <form className="form-inline">
@@ -71,7 +77,7 @@ class Navbar extends Component {
               />
             </div>
             <div className="nav-profile-text" style={{ marginLeft: "0.7rem" }}>
-              <p className="mb-1 text-black font-ubuntu">Ibrahima Fall</p>
+              <p className="mb-1 text-black font-ubuntu">{user.name}</p>
             </div>
           </li>
         </ul>

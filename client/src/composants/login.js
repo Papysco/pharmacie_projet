@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Navigate } from "react-router-dom";
+import axios from "axios";
 import "../style/login.css";
 import logo from "../images/Pharmacie_small.svg";
 
@@ -9,12 +10,14 @@ class Login extends Component {
     password: "",
     error: false,
     authenticated: false,
-    info_login: [
-      { login: "papyscofall@gmail.com", password: "1234" },
-      { login: "papysco@gmail.com", password: "1234" },
-      { login: "papyfall@gmail.com", password: "1234" },
-    ],
+    info_login: [],
   };
+
+  async componentDidMount() {
+    const response = await axios.get("http://localhost:30500/personnel");
+    const listePharmacien = response.data;
+    this.setState({ info_login: listePharmacien });
+  }
 
   handleLogin = (event) => {
     event.preventDefault();
@@ -26,17 +29,21 @@ class Login extends Component {
     for (let i = 0; i < this.state.info_login.length; i++) {
       let element = this.state.info_login[i];
 
-      if (element.login === login && element.password === password) {
+      if (element.email === login && element.mdp === password) {
         found = true;
+
+        const user = {
+          email: login,
+          name: element.prenom + " " + element.nom,
+          isAdmin: true,
+        };
+
+        onLogin(user);
+        this.setState({ error: false, authenticated: true });
       }
     }
 
-    if (found) {
-      this.setState({ error: false, authenticated: true });
-
-      const user = { email: login, name: "User Name", isAdmin: true };
-      onLogin(user);
-    } else {
+    if (!found) {
       this.setState({ error: true });
     }
   };
@@ -125,6 +132,7 @@ class Login extends Component {
                         className="btn btn-primary btn-block fa-lg mb-3 blue_button"
                         type="button"
                         onClick={this.handleLogin}
+                        style={{ fontSize: "1.2rem" }}
                       >
                         Connexion
                       </button>

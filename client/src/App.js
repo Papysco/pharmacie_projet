@@ -10,17 +10,18 @@ import Statut from "./composants/Statut";
 import Ajout from "./composants/ajout";
 import Commande from "./composants/Commande";
 import Vendre from "./composants/Vendre";
+import Personnel from "./composants/personnel";
 
 class MainLayout extends Component {
   render() {
-    const { children } = this.props;
+    const { children, user } = this.props;
 
     return (
       <div className="App">
         <DashBord />
         <section className="section">
           <header className="app-header">
-            <Navbar />
+            <Navbar user={user} />
           </header>
           {children}
         </section>
@@ -50,7 +51,7 @@ class App extends Component {
         <Route
           path="/dashbord/*"
           element={
-            <MainLayout>
+            <MainLayout user={user}>
               <Routes>
                 <Route index element={<Accueil user={user} />} />
                 <Route path="stock" element={<Stock user={user} />} />
@@ -61,6 +62,7 @@ class App extends Component {
                 <Route path="Ajouter" element={<Ajout user={user} />} />
                 <Route path="commander" element={<Commande user={user} />} />
                 <Route path="vendre" element={<Vendre user={user} />} />
+                <Route path="personnel" element={<Personnel user={user} />} />
               </Routes>
             </MainLayout>
           }

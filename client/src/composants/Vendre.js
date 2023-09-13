@@ -111,7 +111,10 @@ class Vendre extends Component {
 
     return (
       <body className="body-accueil">
-        <div className="form-container">
+        <div
+          className="form-container"
+          style={{ height: "40rem", margin: "2rem", marginTop: "0rem" }}
+        >
           <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
             Formulaire de Vente
           </h1>
