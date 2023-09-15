@@ -153,6 +153,9 @@ class Personnel extends Component {
     if (user == null) {
       return <Navigate to="/" />;
     }
+    if (user.isAdmin === 0) {
+      return <Navigate to="/dashbord" />;
+    }
 
     return (
       <body className="body-accueil">

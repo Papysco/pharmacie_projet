@@ -28,7 +28,7 @@ class DashBord extends Component {
       {
         to: "/dashbord/personnel",
         text: "Gestion personnel",
-        icon: "bi-person-gear",
+        icon: "bi bi-person-lock",
       },
     ];
 
@@ -46,7 +46,7 @@ class DashBord extends Component {
               <Link className="link" to={link.to}>
                 {link.text}
               </Link>{" "}
-              <i className={`bi ${link.icon}`} style={{ fontSize: 20 }}></i>
+              <i className={`bi ${link.icon}`} style={{ fontSize: 21 }}></i>
             </li>
           ))}
         </ul>

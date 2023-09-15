@@ -113,7 +113,7 @@ class Vendre extends Component {
       <body className="body-accueil">
         <div
           className="form-container"
-          style={{ height: "40rem", margin: "2rem", marginTop: "0rem" }}
+          style={{ height: "45rem", margin: "2rem", marginTop: "0rem" }}
         >
           <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
             Formulaire de Vente
@@ -123,7 +123,7 @@ class Vendre extends Component {
             <div
               style={{
                 width: "81%",
-                padding: "1rem",
+                // padding: "1rem",
                 margin: "2rem",
                 height: "30rem",
                 overflow: "auto",
@@ -147,7 +147,7 @@ class Vendre extends Component {
                 </button>
               </form>
               <br />
-              <table className="table table-striped table-hover">
+              <table className="table {table-striped} table-hover">
                 <thead>
                   <tr
                     style={{ fontFamily: "ubuntu-regular", fontSize: "1.5rem" }}
@@ -207,7 +207,16 @@ class Vendre extends Component {
               </table>
             </div>
             <br />
-            <div style={{ width: "80%", margin: "2rem", marginTop: "3rem" }}>
+            <div
+              style={{
+                width: "80%",
+                margin: "2rem",
+                marginTop: "1rem",
+                border: "2px dashed black",
+                padding: "1rem",
+                borderRadius: "30px",
+              }}
+            >
               <h2 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
                 Informations
               </h2>

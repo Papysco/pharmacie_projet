@@ -77,7 +77,12 @@ class Navbar extends Component {
               />
             </div>
             <div className="nav-profile-text" style={{ marginLeft: "0.7rem" }}>
-              <p className="mb-1 text-black font-ubuntu">{user.name}</p>
+              <p
+                className="mb-1 text-black font-ubuntu"
+                style={{ color: "color: #00a400;" }}
+              >
+                {user.name}
+              </p>
             </div>
           </li>
         </ul>

@@ -31,11 +31,12 @@ class Login extends Component {
 
       if (element.email === login && element.mdp === password) {
         found = true;
+        const test = element.admin === 1 ? 1 : 0;
 
         const user = {
           email: login,
           name: element.prenom + " " + element.nom,
-          isAdmin: true,
+          isAdmin: test,
         };
 
         onLogin(user);
@@ -90,7 +91,7 @@ class Login extends Component {
                   <div className="text-center">
                     <img
                       src={logo}
-                      style={{ width: "200px", height: "160px" }}
+                      style={{ width: "250px", height: "190px" }}
                       alt="logo"
                     />
                   </div>
@@ -104,7 +105,7 @@ class Login extends Component {
                         type="email"
                         id="identifiant"
                         className="form-control"
-                        placeholder="Adresse E-mail"
+                        placeholder="E-mail"
                         required
                         value={this.state.login}
                         onChange={this.onChangeLogin}
@@ -123,6 +124,7 @@ class Login extends Component {
                         aria-required
                         value={this.state.password}
                         onChange={this.onChangePassword}
+                        required
                       />
                     </div>
 
