@@ -77,11 +77,11 @@ class Navbar extends Component {
               />
             </div>
             <div className="nav-profile-text" style={{ marginLeft: "0.7rem" }}>
-              <p
-                className="mb-1 text-black font-ubuntu"
-                style={{ color: "color: #00a400;" }}
-              >
+              <p className="mb-1 text-success font-ubuntu">
                 {user.name}
+                <span className="position-absolute top-5 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                  {/* <span className="visually-hidden">Connecte</span> */}
+                </span>
               </p>
             </div>
           </li>

@@ -164,7 +164,7 @@ class Accueil extends Component {
                 title="Total Medicaments"
                 value={this.state.nbrTotalMedoc}
                 pourcentage="100"
-                color="blue-dark"
+                color="green-dark"
               />
               <DashboardCard
                 icon="fas fa-ticket-alt"
@@ -174,7 +174,7 @@ class Accueil extends Component {
                   (this.state.nbrMedocAlerte / this.state.nbrTotalMedoc) *
                   100
                 ).toFixed(0)}
-                color="green-dark"
+                color="orange-dark"
               />
               <DashboardCard
                 icon="fas fa-dollar-sign"
@@ -184,7 +184,7 @@ class Accueil extends Component {
                   (this.state.nbrMedocPerime / this.state.nbrTotalMedoc) *
                   100
                 ).toFixed(0)}
-                color="orange-dark"
+                color="red-dark"
               />
             </div>
           </div>
@@ -227,7 +227,7 @@ class Accueil extends Component {
                 const statut = isAlert ? 1 : 0;
 
                 return (
-                  <tr key={medicament.id}>
+                  <tr key={medicament.id} style={{ cursor: "pointer" }}>
                     <th scope="row">
                       <img src={pilule} alt="" />
                     </th>

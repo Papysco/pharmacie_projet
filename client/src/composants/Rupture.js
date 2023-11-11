@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import "../style/accueil.css";
-// import "../style/stock.css";
 import pilule from "../images/pilule.png";
 import pharma_icone from "../images/pharmacie_icone.png";
 
-class Statut extends Component {
+class Rupture extends Component {
   state = {
     medicaments: [],
     recherche: "",
@@ -34,7 +33,11 @@ class Statut extends Component {
     const { medicaments, recherche } = this.state;
     const { user } = this.props;
 
-    const medicamentTrie = medicaments.filter((medicament) => {
+    let medicamentTrie = medicaments.filter((medicament) => {
+      return medicament.quantite <= 20;
+    });
+
+    medicamentTrie = medicamentTrie.filter((medicament) => {
       if (recherche === "") {
         return true;
       } else {
@@ -57,7 +60,7 @@ class Statut extends Component {
           }}
         >
           <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
-            Medicaments En Alerte
+            Stock d'alerte
           </h1>
           <br />
           <br />
@@ -91,9 +94,8 @@ class Statut extends Component {
                 <th scope="col">Statut</th>
                 <th scope="col">Prix Unitaire</th>
                 <th scope="col">Quantité</th>
-                {/* <th scope="col">Fabrication</th> */}
+                <th scope="col">Fabrication</th>
                 <th scope="col">Expiration</th>
-                <th scope="col">Delai</th>
               </tr>
             </thead>
             <tbody>
@@ -102,66 +104,39 @@ class Statut extends Component {
                   Date.now(),
                   medicament.date_expiration
                 );
-                const statut = difference <= 90 ? 1 : 0;
+                const statut = difference <= 15 ? 1 : 0;
 
-                if (statut) {
-                  return (
-                    <tr key={medicament.id} style={{ cursor: "pointer" }}>
-                      <th scope="row">
-                        <img src={pilule} alt="" />
-                      </th>
-                      <td>{medicament.nom}</td>
-                      <td>{medicament.type}</td>
-                      <td>
-                        <span
-                          className={`badge badge-primary ${
-                            statut === 1 ? `bg-danger` : `bg-success`
-                          }`}
-                          style={{
-                            color: "white",
-                            fontSize: 15,
-                            marginLeft: "0.5rem",
-                          }}
-                        >
-                          {statut === 1 ? (
-                            <span>En alerte</span>
-                          ) : (
-                            <span>Normal</span>
-                          )}
-                        </span>
-                      </td>
-                      <td>{medicament.prix} FCFA</td>
-                      <td>{medicament.quantite}</td>
-                      {/* <td>{medicament.date_fabrication}</td> */}
-                      <td>{medicament.date_expiration}</td>
-                      <td>
-                        <span
-                          className={`badge badge-primary bg-primary`}
-                          style={{
-                            color: "white",
-                            fontSize: 15,
-                            marginLeft: "0.5rem",
-                          }}
-                        >
-                          <span>
-                            {" "}
-                            {this.calculateDateDifference(
-                              Date.now(),
-                              medicament.date_expiration
-                            ) <= 0
-                              ? 0 + " Jour(s)"
-                              : this.calculateDateDifference(
-                                  Date.now(),
-                                  medicament.date_expiration
-                                ) + " jour(s)"}
-                          </span>
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                } else {
-                  return null;
-                }
+                return (
+                  <tr key={medicament.id} style={{ cursor: "pointer" }}>
+                    <th scope="row">
+                      <img src={pilule} alt="" />
+                    </th>
+                    <td>{medicament.nom}</td>
+                    <td>{medicament.type}</td>
+                    <td>
+                      <span
+                        className={`badge badge-primary ${
+                          statut === 1 ? `bg-danger` : `bg-success`
+                        }`}
+                        style={{
+                          color: "white",
+                          fontSize: 15,
+                          marginLeft: "0.5rem",
+                        }}
+                      >
+                        {statut === 1 ? (
+                          <span>En alerte</span>
+                        ) : (
+                          <span>Normal</span>
+                        )}
+                      </span>
+                    </td>
+                    <td>{medicament.prix} FCFA</td>
+                    <td>{medicament.quantite}</td>
+                    <td>{medicament.date_fabrication}</td>
+                    <td>{medicament.date_expiration}</td>
+                  </tr>
+                );
               })}
             </tbody>
           </table>
@@ -171,4 +146,4 @@ class Statut extends Component {
   }
 }
 
-export default Statut;
+export default Rupture;

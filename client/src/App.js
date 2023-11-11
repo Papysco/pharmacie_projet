@@ -11,6 +11,7 @@ import Ajout from "./composants/ajout";
 import Commande from "./composants/Commande";
 import Vendre from "./composants/Vendre";
 import Personnel from "./composants/personnel";
+import Rupture from "./composants/Rupture";
 
 class MainLayout extends Component {
   render() {
@@ -55,6 +56,7 @@ class App extends Component {
               <Routes>
                 <Route index element={<Accueil user={user} />} />
                 <Route path="stock" element={<Stock user={user} />} />
+                <Route path="rupture" element={<Rupture user={user} />} />
                 <Route
                   path="medicaments-perimes"
                   element={<Statut user={user} />}

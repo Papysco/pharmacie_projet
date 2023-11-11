@@ -100,10 +100,10 @@ class Stock extends Component {
                   Date.now(),
                   medicament.date_expiration
                 );
-                const statut = difference <= 15 ? 1 : 0;
+                const statut = difference <= 90 ? 1 : 0;
 
                 return (
-                  <tr key={medicament.id}>
+                  <tr key={medicament.id} style={{ cursor: "pointer" }}>
                     <th scope="row">
                       <img src={pilule} alt="" />
                     </th>

@@ -14,9 +14,9 @@ class Vendre extends Component {
     recherche: "",
     id_medicament: 0,
     quantite: 1,
-    prenom_client: "",
+    hopital: "",
     nom_client: "",
-    numero_client: "",
+    docteur: "",
     prix_unitaire: 0,
 
     showModal: false,
@@ -56,9 +56,9 @@ class Vendre extends Component {
     const dataToSend = {
       id_medicament: this.state.id_medicament,
       quantite: this.state.quantite,
-      prenom_client: this.state.prenom_client,
+      hopital: this.state.hopital,
       nom_client: this.state.nom_client,
-      numero_client: this.state.numero_client,
+      docteur: this.state.docteur,
       emailPharmacien: user.email,
     };
 
@@ -70,8 +70,8 @@ class Vendre extends Component {
       this.setState({
         id_medicament: null,
         quantite: 1,
-        prenom_client: "",
-        numero_client: "",
+        hopital: "",
+        docteur: "",
       });
 
       if (response) {
@@ -86,12 +86,16 @@ class Vendre extends Component {
 
   componentDidUpdate() {}
 
+  majDonneeVente(id, prixU) {
+    this.setState({ id_medicament: id, prix_unitaire: prixU });
+  }
+
   render() {
     const {
       id_medicament,
       quantite,
-      prenom_client,
-      numero_client,
+      hopital,
+      docteur,
       medicaments,
       recherche,
     } = this.state;
@@ -113,9 +117,20 @@ class Vendre extends Component {
       <body className="body-accueil">
         <div
           className="form-container"
-          style={{ height: "45rem", margin: "2rem", marginTop: "0rem" }}
+          style={{
+            height: "39rem",
+            margin: "2rem",
+            marginBottom: "-0.5rem",
+            marginTop: "-0.5rem",
+          }}
         >
-          <h1 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
+          <h1
+            style={{
+              fontFamily: "ubuntu-regular",
+              textAlign: "center",
+              marginTop: "-2rem",
+            }}
+          >
             Formulaire de Vente
           </h1>
 
@@ -125,12 +140,15 @@ class Vendre extends Component {
                 width: "81%",
                 // padding: "1rem",
                 margin: "2rem",
-                height: "30rem",
+                height: "29rem",
                 overflow: "auto",
               }}
             >
               <br />
-              <form className="form-inline" style={{ width: "100%" }}>
+              <form
+                className="form-inline"
+                style={{ width: "80%", marginLeft: "2.5rem" }}
+              >
                 <input
                   className="form-control mr-sm-2"
                   type="search"
@@ -174,7 +192,16 @@ class Vendre extends Component {
                     const statut = difference <= 15 ? 1 : 0;
 
                     return (
-                      <tr key={medicament.id}>
+                      <tr
+                        key={medicament.id}
+                        onClick={() => {
+                          this.setState({
+                            id_medicament: medicament.id_medicament,
+                            prix_unitaire: medicament.prix,
+                          });
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
                         <th scope="row">
                           <img src={pilule} alt="" />
                         </th>
@@ -212,7 +239,7 @@ class Vendre extends Component {
                 width: "80%",
                 margin: "2rem",
                 marginTop: "1rem",
-                border: "2px dashed black",
+                border: "2px dashed #4fabe4",
                 padding: "1rem",
                 borderRadius: "30px",
               }}
@@ -235,6 +262,7 @@ class Vendre extends Component {
                         placeholder="Exemple : 12"
                         value={id_medicament}
                         onChange={this.handleInputChange}
+                        readOnly={true}
                         required
                       />
                     </div>
@@ -250,6 +278,7 @@ class Vendre extends Component {
                         className="form-control"
                         value={quantite}
                         onChange={this.handleInputChange}
+                        min={1}
                         required
                       />
                     </div>
@@ -265,6 +294,7 @@ class Vendre extends Component {
                         className="form-control"
                         value={this.state.prix_unitaire}
                         onChange={this.handleInputChange}
+                        readOnly={true}
                         required
                       />
                     </div>
@@ -274,15 +304,15 @@ class Vendre extends Component {
                 <div className="row mb-4">
                   <div className="col">
                     <div className="form-outline">
-                      <label className="form-label" htmlFor="prenom_client">
-                        Prenom Client
+                      <label className="form-label" htmlFor="hopital">
+                        District sanitaire <small>(Ordonnance *)</small>
                       </label>
                       <input
                         type="texte"
-                        id="prenom_client"
+                        id="hopital"
                         className="form-control"
-                        placeholder="Exemple : Modou"
-                        value={prenom_client}
+                        placeholder="Exemple : hopital de Saint-Louis"
+                        value={hopital}
                         onChange={this.handleInputChange}
                       />
                     </div>
@@ -304,15 +334,15 @@ class Vendre extends Component {
                   </div> */}
                   <div className="col">
                     <div className="form-outline">
-                      <label className="form-label" htmlFor="numero_client">
-                        Numero Client
+                      <label className="form-label" htmlFor="docteur">
+                        Info docteur <small>(Ordonnance *)</small>
                       </label>
                       <input
                         type="texte"
-                        id="numero_client"
+                        id="docteur"
                         className="form-control"
-                        placeholder="Exemple : 77 222 43 55"
-                        value={numero_client}
+                        placeholder="Exemple : Dr Mballo diop ..."
+                        value={docteur}
                         onChange={this.handleInputChange}
                       />
                     </div>

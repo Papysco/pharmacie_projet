@@ -16,6 +16,11 @@ class DashBord extends Component {
       { to: "/dashbord/ajouter", text: "Ajouter", icon: "bi-plus-circle-fill" },
       { to: "/dashbord/stock", text: "Stock", icon: "bi-view-list" },
       {
+        to: "/dashbord/rupture",
+        text: "Alerte Rupture",
+        icon: "bi-exclamation-triangle-fill",
+      },
+      {
         to: "/dashbord/commander",
         text: "Commander",
         icon: "bi-cart-check-fill",

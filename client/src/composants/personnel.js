@@ -17,8 +17,8 @@ class Personnel extends Component {
     //
     prenom: "",
     nom: "",
-    admin: 0,
-    type_personne: 0,
+    admin: null,
+    type_personne: null,
     email: "",
     mdp: "",
     telephone: "",
@@ -126,7 +126,8 @@ class Personnel extends Component {
     try {
       const response = await axios.post("/modifier-personnel", dataToSend);
       // console.log(response.data.message);
-      window.alert("Modification avec succes !");
+      window.alert("Modification avec succés !");
+
       this.setState({
         prenom_modif: "",
         nom_modif: "",
@@ -182,7 +183,7 @@ class Personnel extends Component {
             }}
           >
             <h3 style={{ fontFamily: "ubuntu-regular", textAlign: "center" }}>
-              Ajouter personnel
+              Formulaire d'ajout
             </h3>
             <br />
             <div className="row mb-4">
@@ -221,7 +222,7 @@ class Personnel extends Component {
               <div className="col">
                 <div className="form-outline">
                   <label className="form-label" htmlFor="admin">
-                    Admin
+                    Admin <small>(Pharmacien *)</small>
                   </label>
 
                   {/*  */}
@@ -250,7 +251,7 @@ class Personnel extends Component {
                     onChange={this.handleInputChange}
                     required
                   >
-                    <option value=""> pharmacien ou Fournisseur ? </option>
+                    <option value=""> Pharmacien ou Fournisseur ? </option>
                     <option value={0}>pharmacien</option>
                     <option value={1}>fournisseur</option>
                   </select>
@@ -277,7 +278,7 @@ class Personnel extends Component {
               <div className="col">
                 <div className="form-outline">
                   <label className="form-label" htmlFor="mdp">
-                    Mot de passe
+                    Mot de Passe <small>(Pharmacien *)</small>
                   </label>
                   <input
                     type="password"
@@ -346,7 +347,7 @@ class Personnel extends Component {
                 const admin = pharmacien.admin === 1 ? 1 : 0;
 
                 return (
-                  <tr key={pharmacien.id}>
+                  <tr key={pharmacien.id} style={{ cursor: "pointer" }}>
                     <th scope="row">
                       {/* <img src={pilule} alt="" /> */}
                       <i

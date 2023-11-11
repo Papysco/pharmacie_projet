@@ -13,7 +13,7 @@ class Ajout extends Component {
     quantite: "",
     date_fabrication: "",
     date_expiration: "",
-    posologie: "",
+    // posologie: "",
     showModal: false,
     message: null,
   };
@@ -40,7 +40,7 @@ class Ajout extends Component {
       quantite: this.state.quantite,
       date_fabrication: formattedDateFabrication,
       date_expiration: formattedDateExpiration,
-      posologie: this.state.posologie,
+      // posologie: this.state.posologie,
     };
 
     try {
@@ -75,7 +75,7 @@ class Ajout extends Component {
       quantite,
       date_fabrication,
       date_expiration,
-      posologie,
+      // posologie,
     } = this.state;
 
     const { user } = this.props;
@@ -172,6 +172,7 @@ class Ajout extends Component {
                     id="date_fabrication"
                     className="form-control"
                     value={date_fabrication}
+                    max={this.state.date_expiration}
                     onChange={this.handleInputChange}
                     required
                   />
@@ -187,6 +188,7 @@ class Ajout extends Component {
                     id="date_expiration"
                     className="form-control"
                     value={date_expiration}
+                    min={this.state.date_fabrication}
                     onChange={this.handleInputChange}
                     required
                   />
@@ -194,7 +196,7 @@ class Ajout extends Component {
               </div>
             </div>
 
-            <div className="form-outline mb-4">
+            {/* <div className="form-outline mb-4">
               <label className="form-label" htmlFor="posologie">
                 Posologie
               </label>
@@ -207,7 +209,7 @@ class Ajout extends Component {
                 onChange={this.handleInputChange}
                 required
               ></textarea>
-            </div>
+            </div> */}
 
             <button
               type="submit"

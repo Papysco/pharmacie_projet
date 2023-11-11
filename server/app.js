@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const connexion = require("./connexion");
+const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 
 // initialisation
@@ -41,7 +42,6 @@ app.get("/venteRecentes", function (req, res) {
         .status(500)
         .json({ error: "Erreur lors de l'exécution de la requête" });
     }
-
     res.json(results);
   });
 });
@@ -116,7 +116,7 @@ app.get("/nombreMedicamentAlerte", (req, res) => {
     SELECT COUNT(*) as count
     FROM stock s, medicament m
     WHERE s.id_medicament = m.id_medicament AND
-    DATEDIFF(DATE_FORMAT(m.date_expiration, '%y/%m/%d'), DATE_FORMAT(DATE(NOW()), '%y/%m/%d')) <= 15;
+    DATEDIFF(DATE_FORMAT(m.date_expiration, '%y/%m/%d'), DATE_FORMAT(DATE(NOW()), '%y/%m/%d')) <= 90;
   `;
 
   connexion.query(requete, (error, results) => {
@@ -162,7 +162,7 @@ app.post("/ajouter-medicament", (req, res) => {
     quantite,
     date_fabrication,
     date_expiration,
-    posologie,
+    // posologie,
   } = req.body;
 
   const verifierMedicamentQuery = `SELECT COUNT(*) as nbrMedicament FROM medicament WHERE UPPER(nom) = UPPER(?)`;
@@ -185,7 +185,7 @@ app.post("/ajouter-medicament", (req, res) => {
       const nbrMedicament = resultatsVerif[0].nbrMedicament;
 
       if (nbrMedicament === 0) {
-        const insererMedicamentQuery = `INSERT INTO medicament (nom, type, prix, date_fabrication, date_expiration, posologie) VALUES (?, ?, ?, ?, ?, ?)`;
+        const insererMedicamentQuery = `INSERT INTO medicament (nom, type, prix, date_fabrication, date_expiration) VALUES (?, ?, ?, ?, ?)`;
 
         connexion.query(
           insererMedicamentQuery,
@@ -195,7 +195,7 @@ app.post("/ajouter-medicament", (req, res) => {
             prix_unitaire,
             date_fabrication,
             date_expiration,
-            posologie,
+            // posologie,
           ],
           (erreurInsert, resultatsInsert) => {
             if (erreurInsert) {
@@ -307,7 +307,7 @@ app.post("/ajouter-medicament", (req, res) => {
 
 // COMMANDER ---------------------------------------------------------------
 
-app.post("/commander", async (req, res) => {
+app.post("/commander", async (req, res, next) => {
   try {
     const {
       nom_medicament,
@@ -317,8 +317,45 @@ app.post("/commander", async (req, res) => {
       emailPharmacien,
     } = req.body;
 
-    // Bloc Envoi e-mail au fournisseur
-    // A completer .....
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "papyscofall@gmail.com",
+        pass: "idof asrw pnjl cepi",
+      },
+      // host: "localhost",
+      // port: 1025, avec mailDev
+      // secure: false,
+      // tls: {
+      //   rejectUnauthorized: false,
+      // },
+    });
+
+    const message = {
+      from: "papyscofall@gmail.com",
+      to: fournisseurSelectionne,
+      subject: "Commande d'un medicament",
+      html: `
+      <b>Nom Medicament:</b> ${nom_medicament}<br/>
+      <b>Type:</b> ${type}<br/>
+      <b>Quantite:</b> ${quantite}<br/><br/>
+      <b>Email Pharmacien :</b> ${emailPharmacien} <br/>
+      <b>Date : </b> ${Date()}
+    `,
+    };
+
+    transporter.sendMail(message, (error, info) => {
+      if (error) {
+        console.error(error);
+        res.status(400).json("error");
+      } else {
+        console.log("Email envoyé avec succès:", info.response);
+        res.json("sended");
+      }
+      next();
+    });
+
+    // ------------------------------------------
 
     const idPharmacienResult = await executerRequete(
       `SELECT id_pharmacien FROM pharmacien WHERE email = "${emailPharmacien}"`
@@ -355,12 +392,11 @@ app.post("/commander", async (req, res) => {
       ]
     );
 
-    console.log("Commande enregistrée avec succès");
     res.status(200).json({
       message: "Commande enregistrée avec succès",
     });
   } catch (error) {
-    console.error("Erreur lors de l'enregistrement de la commande:", error);
+    // console.error("Erreur lors de l'enregistrement de la commande:", error);
     res.status(500).json({
       erreur: "Erreur lors de l'enregistrement de la commande",
     });
@@ -383,21 +419,15 @@ function executerRequete(query, parametre = []) {
 
 app.post("/vendre", async (req, res) => {
   try {
-    const {
-      id_medicament,
-      quantite,
-      prenom_client,
-      nom_client,
-      numero_client,
-      emailPharmacien,
-    } = req.body;
+    const { id_medicament, quantite, hopital, docteur, emailPharmacien } =
+      req.body;
 
     const dateActuelle = new Date();
 
     const idFactureResult = await executerRequete(
-      `INSERT INTO facture_vente (dateFacture, prenom_client, nom_client, numero_client)
-      VALUES (?, ?, ?, ?)`,
-      [dateActuelle, prenom_client, nom_client, numero_client]
+      `INSERT INTO facture_vente (dateFacture, hopital, docteur)
+      VALUES (?, ?, ?)`,
+      [dateActuelle, hopital, docteur]
     );
 
     const id_facture = idFactureResult.insertId;
@@ -427,8 +457,6 @@ app.post("/vendre", async (req, res) => {
         `DELETE FROM stock WHERE id_medicament  = ${id_medicament}`
       );
     }
-
-    //
 
     console.log("Vente enregistrée avec succès");
     res.status(200).json({
