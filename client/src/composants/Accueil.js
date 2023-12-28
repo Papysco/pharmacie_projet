@@ -104,8 +104,7 @@ class Accueil extends Component {
 
   async componentDidUpdate(prevProps,prevState) {
     if (prevState.selectedDate !== this.state.selectedDate ) {
-      // console.log(this.state.dateHttp);
-
+      
       const response4 = await axios.get(
         `http://localhost:30500/venteRecentes?date=${this.state.dateHttp}`
       );

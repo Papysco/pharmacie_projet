@@ -3,6 +3,8 @@ const cors = require("cors");
 const connexion = require("./connexion");
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
+// const format = require('date-fns/format');
+const { format } = require('date-fns');
 
 // initialisation
 const app = express();
@@ -48,16 +50,17 @@ app.get("/venteRecentes", function (req, res) {
 });
 
 app.get("/venteToDay", function (req, res) {
-  // const dateSelectionne = req.query.date;
-  // console.log(dateSelectionne);
+
+  const currentDate = new Date();
+  const formattedDate = format(currentDate, 'yyyy-MM-dd');
 
   const requete = `SELECT m.id_medicament as id ,m.nom, m.type ,m.prix, DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication ,
     DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
     FROM vente v , medicament m 
     WHERE v.id_medicament = m.id_medicament
-    AND v.date_vente= ${Date.now()}
+    AND v.date_vente = "${formattedDate}"
   `;
-
+  
   connexion.query(requete, (error, results) => {
     if (error) {
       return res
