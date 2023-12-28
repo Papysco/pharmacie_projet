@@ -119,7 +119,7 @@ class Login extends Component {
                       <input
                         type="password"
                         id="password"
-                        placeholder=""
+                        placeholder="password"
                         className="form-control"
                         aria-required
                         value={this.state.password}

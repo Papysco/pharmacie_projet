@@ -28,13 +28,56 @@ app.get("/stock", function (req, res) {
 
 app.get("/venteRecentes", function (req, res) {
   const dateSelectionne = req.query.date;
+  // console.log(dateSelectionne);
 
   const requete = `SELECT m.id_medicament as id ,m.nom, m.type ,m.prix, DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication ,
     DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
     FROM vente v , medicament m 
     WHERE v.id_medicament = m.id_medicament
-    AND v.date_vente = '${dateSelectionne}'
+    AND v.date_vente= "${dateSelectionne}"
   `;
+
+  connexion.query(requete, (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Erreur lors de l'exécution de la requête , vente" });
+    }
+    res.json(results);
+  });
+});
+
+app.get("/venteToDay", function (req, res) {
+  // const dateSelectionne = req.query.date;
+  // console.log(dateSelectionne);
+
+  const requete = `SELECT m.id_medicament as id ,m.nom, m.type ,m.prix, DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication ,
+    DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
+    FROM vente v , medicament m 
+    WHERE v.id_medicament = m.id_medicament
+    AND v.date_vente= ${Date.now()}
+  `;
+
+  connexion.query(requete, (error, results) => {
+    if (error) {
+      return res
+        .status(500)
+        .json({ error: "Erreur lors de l'exécution de la requête , vente" });
+    }
+    res.json(results);
+  });
+});
+
+app.get("/ventes", function (req, res) {  
+
+  let requete = `SELECT m.id_medicament as id ,m.nom, m.type ,m.prix, DATE_FORMAT(m.date_fabrication, '%Y/%m/%d') as date_fabrication ,
+    DATE_FORMAT(m.date_expiration, '%Y/%m/%d') as date_expiration
+    FROM vente v , medicament m 
+    WHERE v.id_medicament = m.id_medicament
+  `;
+  
+  requete = `SELECT * FROM vente;
+`;
 
   connexion.query(requete, (error, results) => {
     if (error) {

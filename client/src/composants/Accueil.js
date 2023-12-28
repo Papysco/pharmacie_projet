@@ -58,6 +58,7 @@ class Accueil extends Component {
     super(props);
     this.state = {
       selectedDate: new Date(),
+      // selectedDate: null,
       dateHttp: "",
       medicaments: [],
       nbrVente: 0,
@@ -68,8 +69,9 @@ class Accueil extends Component {
   }
 
   async componentDidMount() {
-    let date = new Date();
-    date = this.convertDate(date);
+    // let date = new Date();
+    // date = this.convertDate(date);
+    // alert(date);
 
     const response = await axios.get("http://localhost:30500/nombreVente");
     const response1 = await axios.get(
@@ -82,7 +84,7 @@ class Accueil extends Component {
       "http://localhost:30500/nombreMedicamentPerime"
     );
     const response4 = await axios.get(
-      `http://localhost:30500/venteRecentes?date=${date}`
+      `http://localhost:30500/venteToDay`
     );
 
     const nbrVente = response.data[0].count;
@@ -100,22 +102,27 @@ class Accueil extends Component {
     });
   }
 
-  async componentDidUpdate() {
-    const response4 = await axios.get(
-      `http://localhost:30500/venteRecentes?date=${this.state.dateHttp}`
-    );
-    const listeVente = response4.data;
+  async componentDidUpdate(prevProps,prevState) {
+    if (prevState.selectedDate !== this.state.selectedDate ) {
+      // console.log(this.state.dateHttp);
 
-    this.setState({
-      medicaments: listeVente,
-    });
+      const response4 = await axios.get(
+        `http://localhost:30500/venteRecentes?date=${this.state.dateHttp}`
+      );
+      const listeVente = response4.data;
+  
+      this.setState({
+        medicaments: listeVente,
+      });
+    }
+   
   }
 
   handleDateChange = (date) => {
     if (date) {
       let datehttp = this.convertDate(date);
 
-      console.log(datehttp);
+      // console.log(datehttp);
       this.setState({
         selectedDate: date,
         dateHttp: datehttp,
@@ -131,6 +138,7 @@ class Accueil extends Component {
     if (mois < 10) {
       mois = "0" + mois.toString();
     }
+    
     if (jour < 10) {
       jour = "0" + jour.toString();
     }
